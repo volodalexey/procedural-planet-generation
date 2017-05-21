@@ -8,8 +8,9 @@
 
 var scene = null;
 var camera = null;
+var mapCamera = null;
 var renderer = null;
-var projector = null;
+// var projector = null;
 var directionalLight = null;
 var activeAction = null;
 var planet = null;
@@ -69,7 +70,7 @@ $(document).ready(function onDocumentReady()
 	camera = new THREE.PerspectiveCamera(75, 1, 0.2, 2000);
 	mapCamera = new THREE.OrthographicCamera(-1, 1, -1, 1, 1, 10);
 	renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-	projector = new THREE.Projector();
+	// projector = new THREE.Projector();
 
 	mapCamera.position.set(0, 0, 8);
 	mapCamera.up.set(0, 1, 0);
@@ -2362,7 +2363,8 @@ function buildSurfaceRenderObject(tiles, random, action)
 	
 	planetGeometry.dynamic = true;
 	planetGeometry.boundingSphere = new THREE.Sphere(new Vector3(0, 0, 0), 1000);
-	var planetMaterial = new THREE.MeshLambertMaterial({ color: new THREE.Color(0x000000), ambient: new THREE.Color(0xFFFFFF), vertexColors: THREE.VertexColors, });
+	// var planetMaterial = new THREE.MeshLambertMaterial({ color: new THREE.Color(0x000000), ambient: new THREE.Color(0xFFFFFF), vertexColors: THREE.VertexColors, });
+	var planetMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(0x000000), roughness: 0.9, vertexColors: THREE.VertexColors });
 	var planetRenderObject = new THREE.Mesh(planetGeometry, planetMaterial);
 	
 	var mapGeometry = new THREE.Geometry();
@@ -3215,6 +3217,7 @@ function deselectTile()
 	}
 }
 
+const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2();
 function clickHandler(event)
 {
 	if (planet)
@@ -3224,8 +3227,13 @@ function clickHandler(event)
 		var ray;
 		if (projectionRenderMode === "globe")
 		{
-			var rayCaster = projector.pickingRay(new Vector3(x, y, 0), camera);
-			ray = rayCaster.ray;
+			// var rayCaster = projector.pickingRay(new Vector3(x, y, 0), camera);
+			// ray = rayCaster.ray;
+      mouse.x = x;
+      mouse.y = y;
+
+      raycaster.setFromCamera( mouse, camera );
+      ray = raycaster.ray;
 		}
 		else
 		{

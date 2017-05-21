@@ -1,0 +1,23 @@
+{
+  "name": "planet-generator",
+  "version": "1.0.0",
+  "description": "Fork of [Andy Gainey Article example](http://experilous.com/1/blog/post/procedural-planet-generation)",
+  "main": "planet-generator.js",
+  "scripts": {
+    "static": "static . -p 9167"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volodalexey/procedural-planet-generation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/volodalexey/procedural-planet-generation/issues"
+  },
+  "homepage": "https://github.com/volodalexey/procedural-planet-generation#readme",
+  "dependencies": {
+    "node-static": "0.7.9"
+  }
+}
