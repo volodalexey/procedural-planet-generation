@@ -10,7 +10,6 @@ var scene = null;
 var camera = null;
 var mapCamera = null;
 var renderer = null;
-// var projector = null;
 var directionalLight = null;
 var activeAction = null;
 var planet = null;
@@ -70,7 +69,6 @@ function onDocumentReady() {
 	camera = new THREE.PerspectiveCamera(75, 1, 0.2, 2000);
 	mapCamera = new THREE.OrthographicCamera(-1, 1, -1, 1, 1, 10);
 	renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-	// projector = new THREE.Projector();
 
 	mapCamera.position.set(0, 0, 8);
 	mapCamera.up.set(0, 1, 0);
@@ -91,52 +89,30 @@ function onDocumentReady() {
 	resetCamera();
 	updateCamera();
 
-	// ui.body = $("body");
-	// ui.frame = $("#viewportFrame");
 	ui.frame = document.querySelector('#viewportFrame');
-	// ui.rendererElement = $(renderer.domElement);
-	// ui.frame.append(ui.rendererElement);
 	ui.frame.appendChild(renderer.domElement);
-	// ui.rendererElement.on("mousewheel", zoomHandler);
-  // ui.rendererElement.on("click", clickHandler);
   renderer.domElement.addEventListener('wheel', zoomHandler, false);
   renderer.domElement.addEventListener('click', clickHandler, false);
-	// ui.body.on("keydown", keyDownHandler);
-  // ui.body.on("keyup", keyUpHandler);
   document.addEventListener('keydown', keyDownHandler, false);
   document.addEventListener('keyup', keyUpHandler, false);
-  // ui.body.focus();
   document.body.focus();
 
-	// ui.helpPanel = $("#helpPanel");
 	ui.helpPanel = document.querySelector('#helpPanel');
 
-	// ui.controlPanel = $("#controlPanel");
 	ui.controlPanel = document.querySelector('#controlPanel');
 	ui.projectionDisplayButtons =
 	{
-		// globe: $("#projectGlobe"),
-		// equalAreaMap: $("#projectEqualAreaMap"),
-		// mercatorMap: $("#projectMercatorMap"),
     globe: document.querySelector('#projectGlobe'),
 		equalAreaMap: document.querySelector('#projectEqualAreaMap'),
 		mercatorMap: document.querySelector('#projectMercatorMap'),
 	};
 	
-	// ui.projectionDisplayButtons.globe.click(setProjectionRenderMode.bind(null, "globe"));
-	// ui.projectionDisplayButtons.equalAreaMap.click(setProjectionRenderMode.bind(null, "equalAreaMap"));
-	// ui.projectionDisplayButtons.mercatorMap.click(setProjectionRenderMode.bind(null, "mercatorMap"));
 	ui.projectionDisplayButtons.globe.addEventListener('click', setProjectionRenderMode.bind(null, 'globe'), false);
 	ui.projectionDisplayButtons.equalAreaMap.addEventListener('click', setProjectionRenderMode.bind(null, 'equalAreaMap'), false);
 	ui.projectionDisplayButtons.mercatorMap.addEventListener('click', setProjectionRenderMode.bind(null, 'mercatorMap'), false);
 
 	ui.surfaceDisplayButtons =
 	{
-		// terrain: $("#showTerrainButton"),
-		// plates: $("#showPlatesButton"),
-		// elevation: $("#showElevationButton"),
-		// temperature: $("#showTemperatureButton"),
-		// moisture: $("#showMoistureButton"),
     terrain: document.querySelector('#showTerrainButton'),
     plates: document.querySelector('#showPlatesButton'),
     elevation: document.querySelector('#showElevationButton'),
@@ -144,66 +120,36 @@ function onDocumentReady() {
     moisture: document.querySelector('#showMoistureButton'),
 	};
 	
-	// ui.surfaceDisplayButtons.terrain.click(setSurfaceRenderMode.bind(null, "terrain"));
-	// ui.surfaceDisplayButtons.plates.click(setSurfaceRenderMode.bind(null, "plates"));
-	// ui.surfaceDisplayButtons.elevation.click(setSurfaceRenderMode.bind(null, "elevation"));
-	// ui.surfaceDisplayButtons.temperature.click(setSurfaceRenderMode.bind(null, "temperature"));
-	// ui.surfaceDisplayButtons.moisture.click(setSurfaceRenderMode.bind(null, "moisture"));
   ui.surfaceDisplayButtons.terrain.addEventListener('click', setSurfaceRenderMode.bind(null, 'terrain'), false);
   ui.surfaceDisplayButtons.plates.addEventListener('click', setSurfaceRenderMode.bind(null, 'plates'), false);
   ui.surfaceDisplayButtons.elevation.addEventListener('click', setSurfaceRenderMode.bind(null, 'elevation'), false);
   ui.surfaceDisplayButtons.temperature.addEventListener('click', setSurfaceRenderMode.bind(null, 'temperature'), false);
   ui.surfaceDisplayButtons.moisture.addEventListener('click', setSurfaceRenderMode.bind(null, 'moisture'), false);
 
-	// ui.showSunlightButton = $("#showSunlightButton");
-	// ui.showPlateBoundariesButton = $("#showPlateBoundariesButton");
-	// ui.showPlateMovementsButton = $("#showPlateMovementsButton");
-	// ui.showAirCurrentsButton = $("#showAirCurrentsButton");
   ui.showSunlightButton = document.querySelector('#showSunlightButton');
   ui.showPlateBoundariesButton = document.querySelector('#showPlateBoundariesButton');
   ui.showPlateMovementsButton = document.querySelector('#showPlateMovementsButton');
   ui.showAirCurrentsButton = document.querySelector('#showAirCurrentsButton');
 
-	// ui.showSunlightButton.click(showHideSunlight);
-	// ui.showPlateBoundariesButton.click(showHidePlateBoundaries);
-	// ui.showPlateMovementsButton.click(showHidePlateMovements);
-	// ui.showAirCurrentsButton.click(showHideAirCurrents);
   ui.showSunlightButton.addEventListener('click', showHideSunlight, false);
   ui.showPlateBoundariesButton.addEventListener('click', showHidePlateBoundaries, false);
   ui.showPlateMovementsButton.addEventListener('click', showHidePlateMovements, false);
   ui.showAirCurrentsButton.addEventListener('click', showHideAirCurrents, false);
 	
-	// ui.lowDetailButton = $("#lowDetailButton");
-	// ui.mediumDetailButton = $("#mediumDetailButton");
-	// ui.highDetailButton = $("#highDetailButton");
-	// ui.generatePlanetButton = $("#generatePlanetButton");
-	// ui.advancedSettingsButton = $("#advancedSettingsButton");
   ui.lowDetailButton = document.querySelector('#lowDetailButton');
   ui.mediumDetailButton = document.querySelector('#mediumDetailButton');
   ui.highDetailButton = document.querySelector('#highDetailButton');
   ui.generatePlanetButton = document.querySelector('#generatePlanetButton');
   ui.advancedSettingsButton = document.querySelector('#advancedSettingsButton');
 	
-	// ui.lowDetailButton.click(setSubdivisions.bind(null, 20));
-	// ui.mediumDetailButton.click(setSubdivisions.bind(null, 40));
-	// ui.highDetailButton.click(setSubdivisions.bind(null, 60));
-	// ui.generatePlanetButton.click(generatePlanetAsynchronous);
-	// ui.advancedSettingsButton.click(showAdvancedSettings);
   ui.lowDetailButton.addEventListener('click', setSubdivisions.bind(null, 20), false);
   ui.mediumDetailButton.addEventListener('click', setSubdivisions.bind(null, 40), false);
   ui.highDetailButton.addEventListener('click', setSubdivisions.bind(null, 60), false);
   ui.generatePlanetButton.addEventListener('click', generatePlanetAsynchronous, false);
   ui.advancedSettingsButton.addEventListener('click', showAdvancedSettings, false);
 
-	// ui.dataPanel = $("#dataPanel");
 	ui.dataPanel = document.querySelector('#dataPanel');
 
-  // ui.progressPanel = $("#progressPanel");
-  // ui.progressActionLabel = $("#progressActionLabel");
-  // ui.progressBarFrame = $("#progressBarFrame");
-  // ui.progressBar = $("#progressBar");
-  // ui.progressBarLabel = $("#progressBarLabel");
-  // ui.progressCancelButton = $("#progressCancelButton");
   ui.progressPanel = document.querySelector('#progressPanel');
 	ui.progressActionLabel = document.querySelector('#progressActionLabel');
 	ui.progressBarFrame = document.querySelector('#progressBarFrame');
@@ -211,19 +157,9 @@ function onDocumentReady() {
 	ui.progressBarLabel = document.querySelector('#progressBarLabel');
 	ui.progressCancelButton = document.querySelector('#progressCancelButton');
 	
-	// ui.progressCancelButton.click(cancelButtonHandler);
-	// ui.progressPanel.hide();
   ui.progressCancelButton.addEventListener('click', cancelButtonHandler, false);
   ui.progressPanel.classList.add(HIDDEN);
 
-	// ui.tileCountLabel = $("#tileCountLabel");
-	// ui.pentagonCountLabel = $("#pentagonCountLabel");
-	// ui.hexagonCountLabel = $("#hexagonCountLabel");
-	// ui.heptagonCountLabel = $("#heptagonCountLabel");
-	// ui.plateCountLabel = $("#plateCountLabel");
-	// ui.waterPercentageLabel = $("#waterPercentageLabel");
-	// ui.rawSeedLabel = $("#rawSeedLabel");
-	// ui.originalSeedLabel = $("#originalSeedLabel");
   ui.tileCountLabel = document.querySelector('#tileCountLabel');
   ui.pentagonCountLabel = document.querySelector('#pentagonCountLabel');
   ui.hexagonCountLabel = document.querySelector('#hexagonCountLabel');
@@ -233,80 +169,40 @@ function onDocumentReady() {
   ui.rawSeedLabel = document.querySelector('#rawSeedLabel');
   ui.originalSeedLabel = document.querySelector('#originalSeedLabel');
 
-	// ui.minAirCurrentSpeedLabel = $("#minAirCurrentSpeedLabel");
-	// ui.avgAirCurrentSpeedLabel = $("#avgAirCurrentSpeedLabel");
-	// ui.maxAirCurrentSpeedLabel = $("#maxAirCurrentSpeedLabel");
   ui.minAirCurrentSpeedLabel = document.querySelector('#minAirCurrentSpeedLabel');
   ui.avgAirCurrentSpeedLabel = document.querySelector('#avgAirCurrentSpeedLabel');
   ui.maxAirCurrentSpeedLabel = document.querySelector('#maxAirCurrentSpeedLabel');
 
-	// ui.minElevationLabel = $("#minElevationLabel");
-	// ui.avgElevationLabel = $("#avgElevationLabel");
-	// ui.maxElevationLabel = $("#maxElevationLabel");
   ui.minElevationLabel = document.querySelector('#minElevationLabel');
   ui.avgElevationLabel = document.querySelector('#avgElevationLabel');
   ui.maxElevationLabel = document.querySelector('#maxElevationLabel');
 
-	// ui.minTemperatureLabel = $("#minTemperatureLabel");
-	// ui.avgTemperatureLabel = $("#avgTemperatureLabel");
-	// ui.maxTemperatureLabel = $("#maxTemperatureLabel");
   ui.minTemperatureLabel = document.querySelector('#minTemperatureLabel');
   ui.avgTemperatureLabel = document.querySelector('#avgTemperatureLabel');
   ui.maxTemperatureLabel = document.querySelector('#maxTemperatureLabel');
 
-	// ui.minMoistureLabel = $("#minMoistureLabel");
-	// ui.avgMoistureLabel = $("#avgMoistureLabel");
-	// ui.maxMoistureLabel = $("#maxMoistureLabel");
   ui.minMoistureLabel = document.querySelector('#minMoistureLabel');
   ui.avgMoistureLabel = document.querySelector('#avgMoistureLabel');
   ui.maxMoistureLabel = document.querySelector('#maxMoistureLabel');
 
-	// ui.minPlateMovementSpeedLabel = $("#minPlateMovementSpeedLabel");
-	// ui.avgPlateMovementSpeedLabel = $("#avgPlateMovementSpeedLabel");
-	// ui.maxPlateMovementSpeedLabel = $("#maxPlateMovementSpeedLabel");
   ui.minPlateMovementSpeedLabel = document.querySelector('#minPlateMovementSpeedLabel');
   ui.avgPlateMovementSpeedLabel = document.querySelector('#avgPlateMovementSpeedLabel');
   ui.maxPlateMovementSpeedLabel = document.querySelector('#maxPlateMovementSpeedLabel');
 
-	// ui.minTileAreaLabel = $("#minTileAreaLabel");
-	// ui.avgTileAreaLabel = $("#avgTileAreaLabel");
-	// ui.maxTileAreaLabel = $("#maxTileAreaLabel");
   ui.minTileAreaLabel = document.querySelector('#minTileAreaLabel');
   ui.avgTileAreaLabel = document.querySelector('#avgTileAreaLabel');
   ui.maxTileAreaLabel = document.querySelector('#maxTileAreaLabel');
 
-	// ui.minPlateAreaLabel = $("#minPlateAreaLabel");
-	// ui.avgPlateAreaLabel = $("#avgPlateAreaLabel");
-	// ui.maxPlateAreaLabel = $("#maxPlateAreaLabel");
   ui.minPlateAreaLabel = document.querySelector('#minPlateAreaLabel');
   ui.avgPlateAreaLabel = document.querySelector('#avgPlateAreaLabel');
   ui.maxPlateAreaLabel = document.querySelector('#maxPlateAreaLabel');
 
-	// ui.minPlateCircumferenceLabel = $("#minPlateCircumferenceLabel");
-	// ui.avgPlateCircumferenceLabel = $("#avgPlateCircumferenceLabel");
-	// ui.maxPlateCircumferenceLabel = $("#maxPlateCircumferenceLabel");
   ui.minPlateCircumferenceLabel = document.querySelector('#minPlateCircumferenceLabel');
   ui.avgPlateCircumferenceLabel = document.querySelector('#avgPlateCircumferenceLabel');
   ui.maxPlateCircumferenceLabel = document.querySelector('#maxPlateCircumferenceLabel');
 
-	// ui.generationSettingsPanel = $("#generationSettingsPanel");
 	ui.generationSettingsPanel = document.querySelector('#generationSettingsPanel');
-	
-	// ui.detailLevelLabel = $("#detailLevelLabel");
-	// ui.detailLevelRange = $("#detailLevelRange");
-	// ui.distortionLevelLabel = $("#distortionLevelLabel");
-	// ui.distortionLevelRange = $("#distortionLevelRange");
-	// ui.tectonicPlateCountLabel = $("#tectonicPlateCountLabel");
-	// ui.tectonicPlateCountRange = $("#tectonicPlateCountRange");
-	// ui.oceanicRateLabel = $("#oceanicRateLabel");
-	// ui.oceanicRateRange = $("#oceanicRateRange");
-	// ui.heatLevelLabel = $("#heatLevelLabel");
-	// ui.heatLevelRange = $("#heatLevelRange");
-	// ui.moistureLevelLabel = $("#moistureLevelLabel");
-	// ui.moistureLevelRange = $("#moistureLevelRange");
-	// ui.seedTextBox = $("#seedTextBox");
-	// ui.advancedGeneratePlanetButton = $("#advancedGeneratePlanetButton");
-	// ui.advancedCancelButton = $("#advancedCancelButton");
+
   ui.detailLevelLabel = document.querySelector('#detailLevelLabel');
   ui.detailLevelRange = document.querySelector('#detailLevelRange');
   ui.distortionLevelLabel = document.querySelector('#distortionLevelLabel');
@@ -322,16 +218,6 @@ function onDocumentReady() {
   ui.seedTextBox = document.querySelector('#seedTextBox');
   ui.advancedGeneratePlanetButton = document.querySelector('#advancedGeneratePlanetButton');
   ui.advancedCancelButton = document.querySelector('#advancedCancelButton');
-	
-	// ui.detailLevelRange.on("input", function() { setSubdivisions(parseInt(ui.detailLevelRange.val())); });
-	// ui.distortionLevelRange.on("input", function() { setDistortionLevel(parseInt(ui.distortionLevelRange.val()) / 100); });
-	// ui.tectonicPlateCountRange.on("input", function() { setPlateCount(Math.floor(Math.pow(2, parseInt(ui.tectonicPlateCountRange.val()) / 300 * (Math.log(1000) / Math.log(2) - 1) + 1))); });
-	// ui.oceanicRateRange.on("input", function() { setOceanicRate(parseInt(ui.oceanicRateRange.val()) / 100); });
-	// ui.heatLevelRange.on("input", function() { setHeatLevel(parseInt(ui.heatLevelRange.val()) / 100 + 1); });
-	// ui.moistureLevelRange.on("input", function() { setMoistureLevel(parseInt(ui.moistureLevelRange.val()) / 100 + 1); });
-	// ui.seedTextBox.on("input", function() { setSeed(ui.seedTextBox.val()); });
-	// ui.advancedGeneratePlanetButton.click(function() { hideAdvancedSettings(); generatePlanetAsynchronous(); });
-	// ui.advancedCancelButton.click(hideAdvancedSettings);
 
   ui.detailLevelRange.addEventListener('input', function() { setSubdivisions(parseInt(ui.detailLevelRange.value)); }, false);
   ui.distortionLevelRange.addEventListener('input', function() { setDistortionLevel(parseInt(ui.distortionLevelRange.value) / 100); }, false);
@@ -343,12 +229,6 @@ function onDocumentReady() {
   
   ui.advancedGeneratePlanetButton.addEventListener('click', function() { hideAdvancedSettings(); generatePlanetAsynchronous(); }, false);
   ui.advancedCancelButton.addEventListener('click', hideAdvancedSettings, false);
-	
-	// $("button").on("click", function(b) { $(this).blur(); });
-	// $("button").on("focus", function() { disableKeys = true; });
-	// $("input").on("focus", function() { disableKeys = true; });
-	// $("button").on("blur", function() { disableKeys = false; });
-	// $("input").on("blur", function() { disableKeys = false; });
 	
 	hideAdvancedSettings();
 	setPlateCount(50);
@@ -3344,8 +3224,6 @@ function clickHandler(event)
 		var ray;
 		if (projectionRenderMode === "globe")
 		{
-			// var rayCaster = projector.pickingRay(new Vector3(x, y, 0), camera);
-			// ray = rayCaster.ray;
       mouse.x = x;
       mouse.y = y;
 
