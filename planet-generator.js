@@ -2350,7 +2350,13 @@ function buildSurfaceRenderObject(tiles, random, action)
 			buildTileWedgeColors(elevationColors, elevationColor, elevationColor.clone().multiplyScalar(0.5));
 			buildTileWedgeColors(temperatureColors, temperatureColor, temperatureColor.clone().multiplyScalar(0.5));
 			buildTileWedgeColors(moistureColors, moistureColor, moistureColor.clone().multiplyScalar(0.5));
-			for (var k = planetGeometry.faces.length - 3; k < planetGeometry.faces.length; ++k) planetGeometry.faces[k].vertexColors = terrainColors[k];
+      // for (var k = planetGeometry.faces.length - 3; k < planetGeometry.faces.length; ++k) {
+      //   planetGeometry.faces[k].vertexColors = [
+      //     new THREE.Color().copy(terrainColors[k][0]),
+      //     new THREE.Color().copy(terrainColors[k][1]),
+      //     new THREE.Color().copy(terrainColors[k][2]),
+      //   ]
+      // }
 		}
 		
 		++i;
@@ -3626,30 +3632,22 @@ function projectMap(renderData, globeColorArrayKeys, project)
 				
 				face.b = addVertex(p1.x - xWrap01, p1.y - yWrap01, p1.z);
 				face.c = addVertex(p2.x - xWrap02, p2.y - yWrap02, p2.z);
-			}
-			else
-			{
-				if (xWrap01 !== 0)
-				{
-					if (xWrap02 !== 0)
-					{
+			} else {
+				if (xWrap01 !== 0) {
+					if (xWrap02 !== 0) {
 						addFace(i,
 							face.a,
 							addVertex(p1.x - xWrap, p1.y, p1.z),
 							addVertex(p2.x - xWrap, p2.y, p2.z));
 						face.a = addVertex(p0.x + xWrap, p0.y, p0.z);
-					}
-					else
-					{
+					} else {
 						addFace(i,
 							addVertex(p0.x + xWrap, p0.y, p0.z),
 							face.b,
 							addVertex(p2.x + xWrap, p2.y, p2.z));
 						face.b = addVertex(p1.x - xWrap, p1.y, p1.z);
 					}
-				}
-				else if (xWrap02 !== 0)
-				{
+				} else if (xWrap02 !== 0) {
 					addFace(i,
 						addVertex(p0.x + xWrap, p0.y, p0.z),
 						addVertex(p1.x + xWrap, p1.y, p1.z),
@@ -3657,11 +3655,8 @@ function projectMap(renderData, globeColorArrayKeys, project)
 					face.c = addVertex(p2.x - xWrap, p2.y, p2.z);
 				}
 			}
-		}
-		else if (yWrap !== 0)
-		{
-			if (yWrap01 !== 0)
-			{
+		} else if (yWrap !== 0) {
+			if (yWrap01 !== 0) {
 				if (yWrap02 !== 0)
 				{
 					addFace(i,
@@ -3768,9 +3763,16 @@ function setSurfaceRenderMode(mode, force)
 			else return;
 		}
 
-		var faces = geometry.faces;
-		for (var i = 0; i < faces.length; ++i) faces[i].vertexColors = colors[i];
-		
+		let faces = geometry.faces;
+    for (let i = 0; i < faces.length; ++i) {
+      if (!faces[i].vertexColors.length) {
+        faces[i].vertexColors = [ new THREE.Color(), new THREE.Color(), new THREE.Color() ];
+      }
+      faces[i].vertexColors[0].copy(colors[i][0]);
+      faces[i].vertexColors[1].copy(colors[i][1]);
+      faces[i].vertexColors[2].copy(colors[i][2]);
+    }
+
 		geometry.colorsNeedUpdate = true;
 	}
 }
