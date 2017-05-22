@@ -298,3 +298,7 @@ div.key-desc
 	height: 2em;
 }
 
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}

@@ -64,8 +64,8 @@ var KEY = {};
 for (var k = 0; k < 10; ++k) KEY[ String.fromCharCode(k + 48) ] = k + 48;
 for (var k = 0; k < 26; ++k) KEY[ String.fromCharCode(k + 65) ] = k + 65;
 
-$(document).ready(function onDocumentReady()
-{
+const HIDDEN = 'hidden';
+function onDocumentReady() {
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera(75, 1, 0.2, 2000);
 	mapCamera = new THREE.OrthographicCamera(-1, 1, -1, 1, 1, 10);
@@ -91,152 +91,264 @@ $(document).ready(function onDocumentReady()
 	resetCamera();
 	updateCamera();
 
-	ui.body = $("body");
-	ui.frame = $("#viewportFrame");
-	ui.rendererElement = $(renderer.domElement);
-	ui.frame.append(ui.rendererElement);
-	ui.rendererElement.on("mousewheel", zoomHandler);
-	ui.rendererElement.on("click", clickHandler);
-	ui.body.on("keydown", keyDownHandler);
-	ui.body.on("keyup", keyUpHandler);
-	ui.body.focus();
-	
-	ui.helpPanel = $("#helpPanel");
+	// ui.body = $("body");
+	// ui.frame = $("#viewportFrame");
+	ui.frame = document.querySelector('#viewportFrame');
+	// ui.rendererElement = $(renderer.domElement);
+	// ui.frame.append(ui.rendererElement);
+	ui.frame.appendChild(renderer.domElement);
+	// ui.rendererElement.on("mousewheel", zoomHandler);
+  // ui.rendererElement.on("click", clickHandler);
+  renderer.domElement.addEventListener('wheel', zoomHandler, false);
+  renderer.domElement.addEventListener('click', clickHandler, false);
+	// ui.body.on("keydown", keyDownHandler);
+  // ui.body.on("keyup", keyUpHandler);
+  document.addEventListener('keydown', keyDownHandler, false);
+  document.addEventListener('keyup', keyUpHandler, false);
+  // ui.body.focus();
+  document.body.focus();
 
-	ui.controlPanel = $("#controlPanel");
+	// ui.helpPanel = $("#helpPanel");
+	ui.helpPanel = document.querySelector('#helpPanel');
+
+	// ui.controlPanel = $("#controlPanel");
+	ui.controlPanel = document.querySelector('#controlPanel');
 	ui.projectionDisplayButtons =
 	{
-		globe: $("#projectGlobe"),
-		equalAreaMap: $("#projectEqualAreaMap"),
-		mercatorMap: $("#projectMercatorMap"),
+		// globe: $("#projectGlobe"),
+		// equalAreaMap: $("#projectEqualAreaMap"),
+		// mercatorMap: $("#projectMercatorMap"),
+    globe: document.querySelector('#projectGlobe'),
+		equalAreaMap: document.querySelector('#projectEqualAreaMap'),
+		mercatorMap: document.querySelector('#projectMercatorMap'),
 	};
 	
-	ui.projectionDisplayButtons.globe.click(setProjectionRenderMode.bind(null, "globe"));
-	ui.projectionDisplayButtons.equalAreaMap.click(setProjectionRenderMode.bind(null, "equalAreaMap"));
-	ui.projectionDisplayButtons.mercatorMap.click(setProjectionRenderMode.bind(null, "mercatorMap"));
+	// ui.projectionDisplayButtons.globe.click(setProjectionRenderMode.bind(null, "globe"));
+	// ui.projectionDisplayButtons.equalAreaMap.click(setProjectionRenderMode.bind(null, "equalAreaMap"));
+	// ui.projectionDisplayButtons.mercatorMap.click(setProjectionRenderMode.bind(null, "mercatorMap"));
+	ui.projectionDisplayButtons.globe.addEventListener('click', setProjectionRenderMode.bind(null, 'globe'), false);
+	ui.projectionDisplayButtons.equalAreaMap.addEventListener('click', setProjectionRenderMode.bind(null, 'equalAreaMap'), false);
+	ui.projectionDisplayButtons.mercatorMap.addEventListener('click', setProjectionRenderMode.bind(null, 'mercatorMap'), false);
 
 	ui.surfaceDisplayButtons =
 	{
-		terrain: $("#showTerrainButton"),
-		plates: $("#showPlatesButton"),
-		elevation: $("#showElevationButton"),
-		temperature: $("#showTemperatureButton"),
-		moisture: $("#showMoistureButton"),
+		// terrain: $("#showTerrainButton"),
+		// plates: $("#showPlatesButton"),
+		// elevation: $("#showElevationButton"),
+		// temperature: $("#showTemperatureButton"),
+		// moisture: $("#showMoistureButton"),
+    terrain: document.querySelector('#showTerrainButton'),
+    plates: document.querySelector('#showPlatesButton'),
+    elevation: document.querySelector('#showElevationButton'),
+    temperature: document.querySelector('#showTemperatureButton'),
+    moisture: document.querySelector('#showMoistureButton'),
 	};
 	
-	ui.surfaceDisplayButtons.terrain.click(setSurfaceRenderMode.bind(null, "terrain"));
-	ui.surfaceDisplayButtons.plates.click(setSurfaceRenderMode.bind(null, "plates"));
-	ui.surfaceDisplayButtons.elevation.click(setSurfaceRenderMode.bind(null, "elevation"));
-	ui.surfaceDisplayButtons.temperature.click(setSurfaceRenderMode.bind(null, "temperature"));
-	ui.surfaceDisplayButtons.moisture.click(setSurfaceRenderMode.bind(null, "moisture"));
+	// ui.surfaceDisplayButtons.terrain.click(setSurfaceRenderMode.bind(null, "terrain"));
+	// ui.surfaceDisplayButtons.plates.click(setSurfaceRenderMode.bind(null, "plates"));
+	// ui.surfaceDisplayButtons.elevation.click(setSurfaceRenderMode.bind(null, "elevation"));
+	// ui.surfaceDisplayButtons.temperature.click(setSurfaceRenderMode.bind(null, "temperature"));
+	// ui.surfaceDisplayButtons.moisture.click(setSurfaceRenderMode.bind(null, "moisture"));
+  ui.surfaceDisplayButtons.terrain.addEventListener('click', setSurfaceRenderMode.bind(null, 'terrain'), false);
+  ui.surfaceDisplayButtons.plates.addEventListener('click', setSurfaceRenderMode.bind(null, 'plates'), false);
+  ui.surfaceDisplayButtons.elevation.addEventListener('click', setSurfaceRenderMode.bind(null, 'elevation'), false);
+  ui.surfaceDisplayButtons.temperature.addEventListener('click', setSurfaceRenderMode.bind(null, 'temperature'), false);
+  ui.surfaceDisplayButtons.moisture.addEventListener('click', setSurfaceRenderMode.bind(null, 'moisture'), false);
 
-	ui.showSunlightButton = $("#showSunlightButton");
-	ui.showPlateBoundariesButton = $("#showPlateBoundariesButton");
-	ui.showPlateMovementsButton = $("#showPlateMovementsButton");
-	ui.showAirCurrentsButton = $("#showAirCurrentsButton");
+	// ui.showSunlightButton = $("#showSunlightButton");
+	// ui.showPlateBoundariesButton = $("#showPlateBoundariesButton");
+	// ui.showPlateMovementsButton = $("#showPlateMovementsButton");
+	// ui.showAirCurrentsButton = $("#showAirCurrentsButton");
+  ui.showSunlightButton = document.querySelector('#showSunlightButton');
+  ui.showPlateBoundariesButton = document.querySelector('#showPlateBoundariesButton');
+  ui.showPlateMovementsButton = document.querySelector('#showPlateMovementsButton');
+  ui.showAirCurrentsButton = document.querySelector('#showAirCurrentsButton');
 
-	ui.showSunlightButton.click(showHideSunlight);
-	ui.showPlateBoundariesButton.click(showHidePlateBoundaries);
-	ui.showPlateMovementsButton.click(showHidePlateMovements);
-	ui.showAirCurrentsButton.click(showHideAirCurrents);
+	// ui.showSunlightButton.click(showHideSunlight);
+	// ui.showPlateBoundariesButton.click(showHidePlateBoundaries);
+	// ui.showPlateMovementsButton.click(showHidePlateMovements);
+	// ui.showAirCurrentsButton.click(showHideAirCurrents);
+  ui.showSunlightButton.addEventListener('click', showHideSunlight, false);
+  ui.showPlateBoundariesButton.addEventListener('click', showHidePlateBoundaries, false);
+  ui.showPlateMovementsButton.addEventListener('click', showHidePlateMovements, false);
+  ui.showAirCurrentsButton.addEventListener('click', showHideAirCurrents, false);
 	
-	ui.lowDetailButton = $("#lowDetailButton");
-	ui.mediumDetailButton = $("#mediumDetailButton");
-	ui.highDetailButton = $("#highDetailButton");
-	ui.generatePlanetButton = $("#generatePlanetButton");
-	ui.advancedSettingsButton = $("#advancedSettingsButton");
+	// ui.lowDetailButton = $("#lowDetailButton");
+	// ui.mediumDetailButton = $("#mediumDetailButton");
+	// ui.highDetailButton = $("#highDetailButton");
+	// ui.generatePlanetButton = $("#generatePlanetButton");
+	// ui.advancedSettingsButton = $("#advancedSettingsButton");
+  ui.lowDetailButton = document.querySelector('#lowDetailButton');
+  ui.mediumDetailButton = document.querySelector('#mediumDetailButton');
+  ui.highDetailButton = document.querySelector('#highDetailButton');
+  ui.generatePlanetButton = document.querySelector('#generatePlanetButton');
+  ui.advancedSettingsButton = document.querySelector('#advancedSettingsButton');
 	
-	ui.lowDetailButton.click(setSubdivisions.bind(null, 20));
-	ui.mediumDetailButton.click(setSubdivisions.bind(null, 40));
-	ui.highDetailButton.click(setSubdivisions.bind(null, 60));
-	ui.generatePlanetButton.click(generatePlanetAsynchronous);
-	ui.advancedSettingsButton.click(showAdvancedSettings);
+	// ui.lowDetailButton.click(setSubdivisions.bind(null, 20));
+	// ui.mediumDetailButton.click(setSubdivisions.bind(null, 40));
+	// ui.highDetailButton.click(setSubdivisions.bind(null, 60));
+	// ui.generatePlanetButton.click(generatePlanetAsynchronous);
+	// ui.advancedSettingsButton.click(showAdvancedSettings);
+  ui.lowDetailButton.addEventListener('click', setSubdivisions.bind(null, 20), false);
+  ui.mediumDetailButton.addEventListener('click', setSubdivisions.bind(null, 40), false);
+  ui.highDetailButton.addEventListener('click', setSubdivisions.bind(null, 60), false);
+  ui.generatePlanetButton.addEventListener('click', generatePlanetAsynchronous, false);
+  ui.advancedSettingsButton.addEventListener('click', showAdvancedSettings, false);
 
-	ui.dataPanel = $("#dataPanel");
+	// ui.dataPanel = $("#dataPanel");
+	ui.dataPanel = document.querySelector('#dataPanel');
 
-	ui.progressPanel = $("#progressPanel");
-	ui.progressActionLabel = $("#progressActionLabel");
-	ui.progressBarFrame = $("#progressBarFrame");
-	ui.progressBar = $("#progressBar");
-	ui.progressBarLabel = $("#progressBarLabel");
-	ui.progressCancelButton = $("#progressCancelButton");
-	ui.progressCancelButton.click(cancelButtonHandler);
-	ui.progressPanel.hide();
-
-	ui.tileCountLabel = $("#tileCountLabel");
-	ui.pentagonCountLabel = $("#pentagonCountLabel");
-	ui.hexagonCountLabel = $("#hexagonCountLabel");
-	ui.heptagonCountLabel = $("#heptagonCountLabel");
-	ui.plateCountLabel = $("#plateCountLabel");
-	ui.waterPercentageLabel = $("#waterPercentageLabel");
-	ui.rawSeedLabel = $("#rawSeedLabel");
-	ui.originalSeedLabel = $("#originalSeedLabel");
-
-	ui.minAirCurrentSpeedLabel = $("#minAirCurrentSpeedLabel");
-	ui.avgAirCurrentSpeedLabel = $("#avgAirCurrentSpeedLabel");
-	ui.maxAirCurrentSpeedLabel = $("#maxAirCurrentSpeedLabel");
-
-	ui.minElevationLabel = $("#minElevationLabel");
-	ui.avgElevationLabel = $("#avgElevationLabel");
-	ui.maxElevationLabel = $("#maxElevationLabel");
-
-	ui.minTemperatureLabel = $("#minTemperatureLabel");
-	ui.avgTemperatureLabel = $("#avgTemperatureLabel");
-	ui.maxTemperatureLabel = $("#maxTemperatureLabel");
-
-	ui.minMoistureLabel = $("#minMoistureLabel");
-	ui.avgMoistureLabel = $("#avgMoistureLabel");
-	ui.maxMoistureLabel = $("#maxMoistureLabel");
-
-	ui.minPlateMovementSpeedLabel = $("#minPlateMovementSpeedLabel");
-	ui.avgPlateMovementSpeedLabel = $("#avgPlateMovementSpeedLabel");
-	ui.maxPlateMovementSpeedLabel = $("#maxPlateMovementSpeedLabel");
-
-	ui.minTileAreaLabel = $("#minTileAreaLabel");
-	ui.avgTileAreaLabel = $("#avgTileAreaLabel");
-	ui.maxTileAreaLabel = $("#maxTileAreaLabel");
-
-	ui.minPlateAreaLabel = $("#minPlateAreaLabel");
-	ui.avgPlateAreaLabel = $("#avgPlateAreaLabel");
-	ui.maxPlateAreaLabel = $("#maxPlateAreaLabel");
-
-	ui.minPlateCircumferenceLabel = $("#minPlateCircumferenceLabel");
-	ui.avgPlateCircumferenceLabel = $("#avgPlateCircumferenceLabel");
-	ui.maxPlateCircumferenceLabel = $("#maxPlateCircumferenceLabel");
-
-	ui.generationSettingsPanel = $("#generationSettingsPanel");
+  // ui.progressPanel = $("#progressPanel");
+  // ui.progressActionLabel = $("#progressActionLabel");
+  // ui.progressBarFrame = $("#progressBarFrame");
+  // ui.progressBar = $("#progressBar");
+  // ui.progressBarLabel = $("#progressBarLabel");
+  // ui.progressCancelButton = $("#progressCancelButton");
+  ui.progressPanel = document.querySelector('#progressPanel');
+	ui.progressActionLabel = document.querySelector('#progressActionLabel');
+	ui.progressBarFrame = document.querySelector('#progressBarFrame');
+	ui.progressBar = document.querySelector('#progressBar');
+	ui.progressBarLabel = document.querySelector('#progressBarLabel');
+	ui.progressCancelButton = document.querySelector('#progressCancelButton');
 	
-	ui.detailLevelLabel = $("#detailLevelLabel");
-	ui.detailLevelRange = $("#detailLevelRange");
-	ui.distortionLevelLabel = $("#distortionLevelLabel");
-	ui.distortionLevelRange = $("#distortionLevelRange");
-	ui.tectonicPlateCountLabel = $("#tectonicPlateCountLabel");
-	ui.tectonicPlateCountRange = $("#tectonicPlateCountRange");
-	ui.oceanicRateLabel = $("#oceanicRateLabel");
-	ui.oceanicRateRange = $("#oceanicRateRange");
-	ui.heatLevelLabel = $("#heatLevelLabel");
-	ui.heatLevelRange = $("#heatLevelRange");
-	ui.moistureLevelLabel = $("#moistureLevelLabel");
-	ui.moistureLevelRange = $("#moistureLevelRange");
-	ui.seedTextBox = $("#seedTextBox");
-	ui.advancedGeneratePlanetButton = $("#advancedGeneratePlanetButton");
-	ui.advancedCancelButton = $("#advancedCancelButton");
+	// ui.progressCancelButton.click(cancelButtonHandler);
+	// ui.progressPanel.hide();
+  ui.progressCancelButton.addEventListener('click', cancelButtonHandler, false);
+  ui.progressPanel.classList.add(HIDDEN);
+
+	// ui.tileCountLabel = $("#tileCountLabel");
+	// ui.pentagonCountLabel = $("#pentagonCountLabel");
+	// ui.hexagonCountLabel = $("#hexagonCountLabel");
+	// ui.heptagonCountLabel = $("#heptagonCountLabel");
+	// ui.plateCountLabel = $("#plateCountLabel");
+	// ui.waterPercentageLabel = $("#waterPercentageLabel");
+	// ui.rawSeedLabel = $("#rawSeedLabel");
+	// ui.originalSeedLabel = $("#originalSeedLabel");
+  ui.tileCountLabel = document.querySelector('#tileCountLabel');
+  ui.pentagonCountLabel = document.querySelector('#pentagonCountLabel');
+  ui.hexagonCountLabel = document.querySelector('#hexagonCountLabel');
+  ui.heptagonCountLabel = document.querySelector('#heptagonCountLabel');
+  ui.plateCountLabel = document.querySelector('#plateCountLabel');
+  ui.waterPercentageLabel = document.querySelector('#waterPercentageLabel');
+  ui.rawSeedLabel = document.querySelector('#rawSeedLabel');
+  ui.originalSeedLabel = document.querySelector('#originalSeedLabel');
+
+	// ui.minAirCurrentSpeedLabel = $("#minAirCurrentSpeedLabel");
+	// ui.avgAirCurrentSpeedLabel = $("#avgAirCurrentSpeedLabel");
+	// ui.maxAirCurrentSpeedLabel = $("#maxAirCurrentSpeedLabel");
+  ui.minAirCurrentSpeedLabel = document.querySelector('#minAirCurrentSpeedLabel');
+  ui.avgAirCurrentSpeedLabel = document.querySelector('#avgAirCurrentSpeedLabel');
+  ui.maxAirCurrentSpeedLabel = document.querySelector('#maxAirCurrentSpeedLabel');
+
+	// ui.minElevationLabel = $("#minElevationLabel");
+	// ui.avgElevationLabel = $("#avgElevationLabel");
+	// ui.maxElevationLabel = $("#maxElevationLabel");
+  ui.minElevationLabel = document.querySelector('#minElevationLabel');
+  ui.avgElevationLabel = document.querySelector('#avgElevationLabel');
+  ui.maxElevationLabel = document.querySelector('#maxElevationLabel');
+
+	// ui.minTemperatureLabel = $("#minTemperatureLabel");
+	// ui.avgTemperatureLabel = $("#avgTemperatureLabel");
+	// ui.maxTemperatureLabel = $("#maxTemperatureLabel");
+  ui.minTemperatureLabel = document.querySelector('#minTemperatureLabel');
+  ui.avgTemperatureLabel = document.querySelector('#avgTemperatureLabel');
+  ui.maxTemperatureLabel = document.querySelector('#maxTemperatureLabel');
+
+	// ui.minMoistureLabel = $("#minMoistureLabel");
+	// ui.avgMoistureLabel = $("#avgMoistureLabel");
+	// ui.maxMoistureLabel = $("#maxMoistureLabel");
+  ui.minMoistureLabel = document.querySelector('#minMoistureLabel');
+  ui.avgMoistureLabel = document.querySelector('#avgMoistureLabel');
+  ui.maxMoistureLabel = document.querySelector('#maxMoistureLabel');
+
+	// ui.minPlateMovementSpeedLabel = $("#minPlateMovementSpeedLabel");
+	// ui.avgPlateMovementSpeedLabel = $("#avgPlateMovementSpeedLabel");
+	// ui.maxPlateMovementSpeedLabel = $("#maxPlateMovementSpeedLabel");
+  ui.minPlateMovementSpeedLabel = document.querySelector('#minPlateMovementSpeedLabel');
+  ui.avgPlateMovementSpeedLabel = document.querySelector('#avgPlateMovementSpeedLabel');
+  ui.maxPlateMovementSpeedLabel = document.querySelector('#maxPlateMovementSpeedLabel');
+
+	// ui.minTileAreaLabel = $("#minTileAreaLabel");
+	// ui.avgTileAreaLabel = $("#avgTileAreaLabel");
+	// ui.maxTileAreaLabel = $("#maxTileAreaLabel");
+  ui.minTileAreaLabel = document.querySelector('#minTileAreaLabel');
+  ui.avgTileAreaLabel = document.querySelector('#avgTileAreaLabel');
+  ui.maxTileAreaLabel = document.querySelector('#maxTileAreaLabel');
+
+	// ui.minPlateAreaLabel = $("#minPlateAreaLabel");
+	// ui.avgPlateAreaLabel = $("#avgPlateAreaLabel");
+	// ui.maxPlateAreaLabel = $("#maxPlateAreaLabel");
+  ui.minPlateAreaLabel = document.querySelector('#minPlateAreaLabel');
+  ui.avgPlateAreaLabel = document.querySelector('#avgPlateAreaLabel');
+  ui.maxPlateAreaLabel = document.querySelector('#maxPlateAreaLabel');
+
+	// ui.minPlateCircumferenceLabel = $("#minPlateCircumferenceLabel");
+	// ui.avgPlateCircumferenceLabel = $("#avgPlateCircumferenceLabel");
+	// ui.maxPlateCircumferenceLabel = $("#maxPlateCircumferenceLabel");
+  ui.minPlateCircumferenceLabel = document.querySelector('#minPlateCircumferenceLabel');
+  ui.avgPlateCircumferenceLabel = document.querySelector('#avgPlateCircumferenceLabel');
+  ui.maxPlateCircumferenceLabel = document.querySelector('#maxPlateCircumferenceLabel');
+
+	// ui.generationSettingsPanel = $("#generationSettingsPanel");
+	ui.generationSettingsPanel = document.querySelector('#generationSettingsPanel');
 	
-	ui.detailLevelRange.on("input", function() { setSubdivisions(parseInt(ui.detailLevelRange.val())); });
-	ui.distortionLevelRange.on("input", function() { setDistortionLevel(parseInt(ui.distortionLevelRange.val()) / 100); });
-	ui.tectonicPlateCountRange.on("input", function() { setPlateCount(Math.floor(Math.pow(2, parseInt(ui.tectonicPlateCountRange.val()) / 300 * (Math.log(1000) / Math.log(2) - 1) + 1))); });
-	ui.oceanicRateRange.on("input", function() { setOceanicRate(parseInt(ui.oceanicRateRange.val()) / 100); });
-	ui.heatLevelRange.on("input", function() { setHeatLevel(parseInt(ui.heatLevelRange.val()) / 100 + 1); });
-	ui.moistureLevelRange.on("input", function() { setMoistureLevel(parseInt(ui.moistureLevelRange.val()) / 100 + 1); });
-	ui.seedTextBox.on("input", function() { setSeed(ui.seedTextBox.val()); });
-	ui.advancedGeneratePlanetButton.click(function() { hideAdvancedSettings(); generatePlanetAsynchronous(); });
-	ui.advancedCancelButton.click(hideAdvancedSettings);
+	// ui.detailLevelLabel = $("#detailLevelLabel");
+	// ui.detailLevelRange = $("#detailLevelRange");
+	// ui.distortionLevelLabel = $("#distortionLevelLabel");
+	// ui.distortionLevelRange = $("#distortionLevelRange");
+	// ui.tectonicPlateCountLabel = $("#tectonicPlateCountLabel");
+	// ui.tectonicPlateCountRange = $("#tectonicPlateCountRange");
+	// ui.oceanicRateLabel = $("#oceanicRateLabel");
+	// ui.oceanicRateRange = $("#oceanicRateRange");
+	// ui.heatLevelLabel = $("#heatLevelLabel");
+	// ui.heatLevelRange = $("#heatLevelRange");
+	// ui.moistureLevelLabel = $("#moistureLevelLabel");
+	// ui.moistureLevelRange = $("#moistureLevelRange");
+	// ui.seedTextBox = $("#seedTextBox");
+	// ui.advancedGeneratePlanetButton = $("#advancedGeneratePlanetButton");
+	// ui.advancedCancelButton = $("#advancedCancelButton");
+  ui.detailLevelLabel = document.querySelector('#detailLevelLabel');
+  ui.detailLevelRange = document.querySelector('#detailLevelRange');
+  ui.distortionLevelLabel = document.querySelector('#distortionLevelLabel');
+  ui.distortionLevelRange = document.querySelector('#distortionLevelRange');
+  ui.tectonicPlateCountLabel = document.querySelector('#tectonicPlateCountLabel');
+  ui.tectonicPlateCountRange = document.querySelector('#tectonicPlateCountRange');
+  ui.oceanicRateLabel = document.querySelector('#oceanicRateLabel');
+  ui.oceanicRateRange = document.querySelector('#oceanicRateRange');
+  ui.heatLevelLabel = document.querySelector('#heatLevelLabel');
+  ui.heatLevelRange = document.querySelector('#heatLevelRange');
+  ui.moistureLevelLabel = document.querySelector('#moistureLevelLabel');
+  ui.moistureLevelRange = document.querySelector('#moistureLevelRange');
+  ui.seedTextBox = document.querySelector('#seedTextBox');
+  ui.advancedGeneratePlanetButton = document.querySelector('#advancedGeneratePlanetButton');
+  ui.advancedCancelButton = document.querySelector('#advancedCancelButton');
 	
-	$("button").on("click", function(b) { $(this).blur(); });
-	$("button").on("focus", function() { disableKeys = true; });
-	$("input").on("focus", function() { disableKeys = true; });
-	$("button").on("blur", function() { disableKeys = false; });
-	$("input").on("blur", function() { disableKeys = false; });
+	// ui.detailLevelRange.on("input", function() { setSubdivisions(parseInt(ui.detailLevelRange.val())); });
+	// ui.distortionLevelRange.on("input", function() { setDistortionLevel(parseInt(ui.distortionLevelRange.val()) / 100); });
+	// ui.tectonicPlateCountRange.on("input", function() { setPlateCount(Math.floor(Math.pow(2, parseInt(ui.tectonicPlateCountRange.val()) / 300 * (Math.log(1000) / Math.log(2) - 1) + 1))); });
+	// ui.oceanicRateRange.on("input", function() { setOceanicRate(parseInt(ui.oceanicRateRange.val()) / 100); });
+	// ui.heatLevelRange.on("input", function() { setHeatLevel(parseInt(ui.heatLevelRange.val()) / 100 + 1); });
+	// ui.moistureLevelRange.on("input", function() { setMoistureLevel(parseInt(ui.moistureLevelRange.val()) / 100 + 1); });
+	// ui.seedTextBox.on("input", function() { setSeed(ui.seedTextBox.val()); });
+	// ui.advancedGeneratePlanetButton.click(function() { hideAdvancedSettings(); generatePlanetAsynchronous(); });
+	// ui.advancedCancelButton.click(hideAdvancedSettings);
+
+  ui.detailLevelRange.addEventListener('input', function() { setSubdivisions(parseInt(ui.detailLevelRange.value)); }, false);
+  ui.distortionLevelRange.addEventListener('input', function() { setDistortionLevel(parseInt(ui.distortionLevelRange.value) / 100); }, false);
+  ui.tectonicPlateCountRange.addEventListener('input', function() { setPlateCount(Math.floor(Math.pow(2, parseInt(ui.tectonicPlateCountRange.value) / 300 * (Math.log(1000) / Math.log(2) - 1) + 1))); }, false);
+  ui.oceanicRateRange.addEventListener('input', function() { setOceanicRate(parseInt(ui.oceanicRateRange.value) / 100); }, false);
+  ui.heatLevelRange.addEventListener('input', function() { setHeatLevel(parseInt(ui.heatLevelRange.value) / 100 + 1); }, false);
+  ui.moistureLevelRange.addEventListener('input', function() { setMoistureLevel(parseInt(ui.moistureLevelRange.value) / 100 + 1); }, false);
+  ui.seedTextBox.addEventListener('input', function() { setSeed(ui.seedTextBox.value); }, false);
+  
+  ui.advancedGeneratePlanetButton.addEventListener('click', function() { hideAdvancedSettings(); generatePlanetAsynchronous(); }, false);
+  ui.advancedCancelButton.addEventListener('click', hideAdvancedSettings, false);
+	
+	// $("button").on("click", function(b) { $(this).blur(); });
+	// $("button").on("focus", function() { disableKeys = true; });
+	// $("input").on("focus", function() { disableKeys = true; });
+	// $("button").on("blur", function() { disableKeys = false; });
+	// $("input").on("blur", function() { disableKeys = false; });
 	
 	hideAdvancedSettings();
 	setPlateCount(50);
@@ -252,25 +364,30 @@ $(document).ready(function onDocumentReady()
 
 	//saveToFileSystem(serializePlanetMesh(planet.mesh, "function getPregeneratedPlanetMesh() { return ", "; }\n"));
 
-	window.addEventListener("resize", resizeHandler);
+	window.addEventListener("resize", resizeHandler, false);
 	resizeHandler();
 	
 	ui.generatePlanetButton.click();
-});
+}
+
+window.addEventListener('load', onDocumentReady, false);
 
 function setSubdivisions(subdivisions)
 {
 	if (typeof(subdivisions) === "number" && subdivisions >= 4)
 	{
 		generationSettings.subdivisions = subdivisions;
-		$("#detailDisplaylist>button.toggled").removeClass("toggled");
-		if (subdivisions === 20) ui.lowDetailButton.addClass("toggled");
-		else if (subdivisions === 40) ui.mediumDetailButton.addClass("toggled");
-		else if (subdivisions === 60) ui.highDetailButton.addClass("toggled");
+    for (let element of document.querySelectorAll("#detailDisplaylist>button.toggled")) {
+      element.classList.remove('toggled');
+    }
+
+		if (subdivisions === 20) ui.lowDetailButton.classList.add("toggled");
+		else if (subdivisions === 40) ui.mediumDetailButton.classList.add("toggled");
+		else if (subdivisions === 60) ui.highDetailButton.classList.add("toggled");
 		
 		subdivisions = subdivisions.toFixed(0);
-		if (ui.detailLevelRange.val() !== subdivisions) ui.detailLevelRange.val(subdivisions);
-		ui.detailLevelLabel.text("Detail Level (" + subdivisions + ")");
+		if (ui.detailLevelRange.value !== subdivisions) ui.detailLevelRange.value = subdivisions;
+		ui.detailLevelLabel.textContent = "Detail Level (" + subdivisions + ")";
 	}
 }
 
@@ -282,8 +399,8 @@ function setDistortionLevel(distortionLevel)
 		
 		distortionLevel = Math.floor(distortionLevel * 100 + 0.5).toFixed(0);
 		
-		if (ui.distortionLevelRange.val() !== distortionLevel) ui.distortionLevelRange.val(distortionLevel);
-		ui.distortionLevelLabel.text("Distortion Level (" + distortionLevel + "%)");
+		if (ui.distortionLevelRange.value !== distortionLevel) ui.distortionLevelRange.value = distortionLevel;
+		ui.distortionLevelLabel.textContent = "Distortion Level (" + distortionLevel + "%)";
 	}
 }
 
@@ -294,8 +411,8 @@ function setPlateCount(plateCount)
 		generationSettings.plateCount = plateCount;
 		
 		var sliderVal = Math.ceil((Math.log(plateCount) / Math.log(2) - 1) / (Math.log(1000) / Math.log(2) - 1) * 300).toFixed(0);
-		if (ui.tectonicPlateCountRange.val() !== sliderVal) ui.tectonicPlateCountRange.val(sliderVal);
-		ui.tectonicPlateCountLabel.text(plateCount.toFixed(0));
+		if (ui.tectonicPlateCountRange.value !== sliderVal) ui.tectonicPlateCountRange.value = sliderVal;
+		ui.tectonicPlateCountLabel.textContent = plateCount.toFixed(0);
 	}
 }
 
@@ -307,8 +424,8 @@ function setOceanicRate(oceanicRate)
 		
 		oceanicRate = Math.floor(oceanicRate * 100 + 0.5).toFixed(0);
 		
-		if (ui.oceanicRateRange.val() !== oceanicRate) ui.oceanicRateRange.val(oceanicRate);
-		ui.oceanicRateLabel.text(oceanicRate);
+		if (ui.oceanicRateRange.value !== oceanicRate) ui.oceanicRateRange.value = oceanicRate;
+		ui.oceanicRateLabel.textContent = oceanicRate;
 	}
 }
 
@@ -320,10 +437,10 @@ function setHeatLevel(heatLevel)
 		
 		heatLevel = Math.floor(heatLevel * 100 - 100).toFixed(0);
 		
-		if (ui.heatLevelRange.val() !== heatLevel) ui.heatLevelRange.val(heatLevel);
+		if (ui.heatLevelRange.value !== heatLevel) ui.heatLevelRange.value = heatLevel;
 		if (generationSettings.heatLevel > 1) heatLevel = "+" + heatLevel;
 		else if (generationSettings.heatLevel < 1) heatLevel = "-" + heatLevel;
-		ui.heatLevelLabel.text(heatLevel);
+		ui.heatLevelLabel.textContent = heatLevel;
 	}
 }
 
@@ -335,10 +452,10 @@ function setMoistureLevel(moistureLevel)
 		
 		moistureLevel = Math.floor(moistureLevel * 100 - 100).toFixed(0);
 		
-		if (ui.moistureLevelRange.val() !== moistureLevel) ui.moistureLevelRange.val(moistureLevel);
+		if (ui.moistureLevelRange.value !== moistureLevel) ui.moistureLevelRange.value = moistureLevel;
 		if (generationSettings.moistureLevel > 1) moistureLevel = "+" + moistureLevel;
 		else if (generationSettings.moistureLevel < 1) moistureLevel = "-" + moistureLevel;
-		ui.moistureLevelLabel.text(moistureLevel);
+		ui.moistureLevelLabel.textContent = moistureLevel;
 	}
 }
 
@@ -348,7 +465,7 @@ function setSeed(seed)
 	if (typeof(seed) === "number")
 	{
 		generationSettings.seed = Math.floor(seed);
-		ui.seedTextBox.val(generationSettings.seed.toFixed(0));
+		ui.seedTextBox.value = generationSettings.seed.toFixed(0);
 	}
 	else if (typeof(seed) === "string")
 	{
@@ -360,13 +477,13 @@ function setSeed(seed)
 		else
 		{
 			generationSettings.seed = asInt;
-			ui.seedTextBox.val(generationSettings.seed.toFixed(0));
+			ui.seedTextBox.value = generationSettings.seed.toFixed(0);
 		}
 	}
 	else
 	{
 		generationSettings.seed = null;
-		ui.seedTextBox.val("");
+		ui.seedTextBox.value = '';
 	}
 }
 
@@ -395,22 +512,22 @@ function generatePlanetAsynchronous()
 	var moistureLevel = generationSettings.moistureLevel;
 	
 	activeAction = new SteppedAction(updateProgressUI)
-		.executeSubaction(function(action) { ui.progressPanel.show(); }, 0)
+		.executeSubaction(function(action) { ui.progressPanel.classList.remove(HIDDEN); }, 0)
 		.executeSubaction(function(action) { generatePlanet(subdivisions, distortionRate, plateCount, oceanicRate, heatLevel, moistureLevel, random, action); }, 1, "Generating Planet")
 		.getResult(function(result) { planet = result; planet.seed = seed; planet.originalSeed = originalSeed; })
 		.executeSubaction(function(action) { displayPlanet(planet); setSeed(null); }, 0)
-		.finalize(function(action) { activeAction = null; ui.progressPanel.hide(); }, 0)
+		.finalize(function(action) { activeAction = null; ui.progressPanel.classList.add(HIDDEN); }, 0)
 		.execute();
 }
 
 function showAdvancedSettings()
 {
-	ui.generationSettingsPanel.show();
+	ui.generationSettingsPanel.classList.remove(HIDDEN);
 }
 
 function hideAdvancedSettings()
 {
-	ui.generationSettingsPanel.hide();
+	ui.generationSettingsPanel.classList.add(HIDDEN);
 }
 
 function Planet()
@@ -3431,62 +3548,65 @@ function displayPlanet(newPlanet)
 
 function showHideInterface()
 {
-	ui.helpPanel.toggle();
-	ui.controlPanel.toggle();
-	ui.dataPanel.toggle();
+	// ui.helpPanel.toggle();
+	// ui.controlPanel.toggle();
+	// ui.dataPanel.toggle();
+	ui.helpPanel.classList.toggle(HIDDEN);
+	ui.controlPanel.classList.toggle(HIDDEN);
+	ui.dataPanel.classList.toggle(HIDDEN);
 }
 
 function updateUI()
 {
-	ui.tileCountLabel.text(planet.statistics.tiles.count.toFixed(0));
-	ui.pentagonCountLabel.text(planet.statistics.tiles.pentagonCount.toFixed(0));
-	ui.hexagonCountLabel.text(planet.statistics.tiles.hexagonCount.toFixed(0));
-	ui.heptagonCountLabel.text(planet.statistics.tiles.heptagonCount.toFixed(0));
-	ui.plateCountLabel.text(planet.statistics.plates.count.toFixed(0));
-	ui.waterPercentageLabel.text(((planet.statistics.tiles.biomeAreas["ocean"] + planet.statistics.tiles.biomeAreas["oceanGlacier"]) / planet.statistics.tiles.totalArea * 100).toFixed(0) + "%");
+	ui.tileCountLabel.textContent = planet.statistics.tiles.count.toFixed(0);
+	ui.pentagonCountLabel.textContent = planet.statistics.tiles.pentagonCount.toFixed(0);
+	ui.hexagonCountLabel.textContent = planet.statistics.tiles.hexagonCount.toFixed(0);
+	ui.heptagonCountLabel.textContent = planet.statistics.tiles.heptagonCount.toFixed(0);
+	ui.plateCountLabel.textContent = planet.statistics.plates.count.toFixed(0);
+	ui.waterPercentageLabel.textContent = ((planet.statistics.tiles.biomeAreas["ocean"] + planet.statistics.tiles.biomeAreas["oceanGlacier"]) / planet.statistics.tiles.totalArea * 100).toFixed(0) + "%";
 
-	ui.rawSeedLabel.val(planet.seed);
-	ui.originalSeedLabel.val(planet.originalSeed !== null ? planet.originalSeed : "");
+	ui.rawSeedLabel.value = planet.seed;
+	ui.originalSeedLabel.value = (planet.originalSeed !== null ? planet.originalSeed : "");
 
-	ui.minAirCurrentSpeedLabel.text(planet.statistics.corners.airCurrent.min.toFixed(0));
-	ui.avgAirCurrentSpeedLabel.text(planet.statistics.corners.airCurrent.avg.toFixed(0));
-	ui.maxAirCurrentSpeedLabel.text(planet.statistics.corners.airCurrent.max.toFixed(0));
+	ui.minAirCurrentSpeedLabel.textContent = planet.statistics.corners.airCurrent.min.toFixed(0);
+	ui.avgAirCurrentSpeedLabel.textContent = planet.statistics.corners.airCurrent.avg.toFixed(0);
+	ui.maxAirCurrentSpeedLabel.textContent = planet.statistics.corners.airCurrent.max.toFixed(0);
 
-	ui.minElevationLabel.text((planet.statistics.tiles.elevation.min * 100).toFixed(0));
-	ui.avgElevationLabel.text((planet.statistics.tiles.elevation.avg * 100).toFixed(0));
-	ui.maxElevationLabel.text((planet.statistics.tiles.elevation.max * 100).toFixed(0));
+	ui.minElevationLabel.textContent = (planet.statistics.tiles.elevation.min * 100).toFixed(0);
+	ui.avgElevationLabel.textContent = (planet.statistics.tiles.elevation.avg * 100).toFixed(0);
+	ui.maxElevationLabel.textContent = (planet.statistics.tiles.elevation.max * 100).toFixed(0);
 
-	ui.minTemperatureLabel.text((planet.statistics.tiles.temperature.min * 100).toFixed(0));
-	ui.avgTemperatureLabel.text((planet.statistics.tiles.temperature.avg * 100).toFixed(0));
-	ui.maxTemperatureLabel.text((planet.statistics.tiles.temperature.max * 100).toFixed(0));
+	ui.minTemperatureLabel.textContent = (planet.statistics.tiles.temperature.min * 100).toFixed(0);
+	ui.avgTemperatureLabel.textContent = (planet.statistics.tiles.temperature.avg * 100).toFixed(0);
+	ui.maxTemperatureLabel.textContent = (planet.statistics.tiles.temperature.max * 100).toFixed(0);
 
-	ui.minMoistureLabel.text((planet.statistics.tiles.moisture.min * 100).toFixed(0));
-	ui.avgMoistureLabel.text((planet.statistics.tiles.moisture.avg * 100).toFixed(0));
-	ui.maxMoistureLabel.text((planet.statistics.tiles.moisture.max * 100).toFixed(0));
+	ui.minMoistureLabel.textContent = (planet.statistics.tiles.moisture.min * 100).toFixed(0);
+	ui.avgMoistureLabel.textContent = (planet.statistics.tiles.moisture.avg * 100).toFixed(0);
+	ui.maxMoistureLabel.textContent = (planet.statistics.tiles.moisture.max * 100).toFixed(0);
 
-	ui.minPlateMovementSpeedLabel.text(planet.statistics.tiles.plateMovement.min.toFixed(0));
-	ui.avgPlateMovementSpeedLabel.text(planet.statistics.tiles.plateMovement.avg.toFixed(0));
-	ui.maxPlateMovementSpeedLabel.text(planet.statistics.tiles.plateMovement.max.toFixed(0));
+	ui.minPlateMovementSpeedLabel.textContent = planet.statistics.tiles.plateMovement.min.toFixed(0);
+	ui.avgPlateMovementSpeedLabel.textContent = planet.statistics.tiles.plateMovement.avg.toFixed(0);
+	ui.maxPlateMovementSpeedLabel.textContent = planet.statistics.tiles.plateMovement.max.toFixed(0);
 
-	ui.minTileAreaLabel.text(planet.statistics.tiles.area.min.toFixed(0));
-	ui.avgTileAreaLabel.text(planet.statistics.tiles.area.avg.toFixed(0));
-	ui.maxTileAreaLabel.text(planet.statistics.tiles.area.max.toFixed(0));
+	ui.minTileAreaLabel.textContent = planet.statistics.tiles.area.min.toFixed(0);
+	ui.avgTileAreaLabel.textContent = planet.statistics.tiles.area.avg.toFixed(0);
+	ui.maxTileAreaLabel.textContent = planet.statistics.tiles.area.max.toFixed(0);
 
-	ui.minPlateAreaLabel.text((planet.statistics.plates.area.min / 1000).toFixed(0) + "K");
-	ui.avgPlateAreaLabel.text((planet.statistics.plates.area.avg / 1000).toFixed(0) + "K");
-	ui.maxPlateAreaLabel.text((planet.statistics.plates.area.max / 1000).toFixed(0) + "K");
+	ui.minPlateAreaLabel.textContent = (planet.statistics.plates.area.min / 1000).toFixed(0) + "K";
+	ui.avgPlateAreaLabel.textContent = (planet.statistics.plates.area.avg / 1000).toFixed(0) + "K";
+	ui.maxPlateAreaLabel.textContent = (planet.statistics.plates.area.max / 1000).toFixed(0) + "K";
 
-	ui.minPlateCircumferenceLabel.text(planet.statistics.plates.circumference.min.toFixed(0));
-	ui.avgPlateCircumferenceLabel.text(planet.statistics.plates.circumference.avg.toFixed(0));
-	ui.maxPlateCircumferenceLabel.text(planet.statistics.plates.circumference.max.toFixed(0));
+	ui.minPlateCircumferenceLabel.textContent = planet.statistics.plates.circumference.min.toFixed(0);
+	ui.avgPlateCircumferenceLabel.textContent = planet.statistics.plates.circumference.avg.toFixed(0);
+	ui.maxPlateCircumferenceLabel.textContent = planet.statistics.plates.circumference.max.toFixed(0);
 }
 
 function updateProgressUI(action)
 {
 	var progress = action.getProgress();
-	ui.progressBar.css("width", (progress * 100).toFixed(0) + "%");
-	ui.progressBarLabel.text((progress * 100).toFixed(0) + "%");
-	ui.progressActionLabel.text(action.getCurrentActionName());
+	ui.progressBar.style.width = (progress * 100).toFixed(0) + "%";
+	ui.progressBarLabel.textContent = (progress * 100).toFixed(0) + "%";
+	ui.progressActionLabel.textContent = action.getCurrentActionName();
 }
 
 function projectMap(renderData, globeColorArrayKeys, project)
@@ -3702,8 +3822,11 @@ function setProjectionRenderMode(mode, force)
 {
 	if (mode !== projectionRenderMode || force === true)
 	{
-		$("#projectionDisplayList>button").removeClass("toggled");
-		ui.projectionDisplayButtons[mode].addClass("toggled");
+	  for (let element of document.querySelectorAll("#projectionDisplayList>button")) {
+	    element.classList.remove('toggled');
+    }
+
+		ui.projectionDisplayButtons[mode].classList.add("toggled");
 		
 		if (!planet) return;
 
@@ -3734,8 +3857,11 @@ function setSurfaceRenderMode(mode, force)
 {
 	if (mode !== surfaceRenderMode || force === true)
 	{
-		$("#surfaceDisplayList>button").removeClass("toggled");
-		ui.surfaceDisplayButtons[mode].addClass("toggled");
+    for (let element of document.querySelectorAll("#surfaceDisplayList>button")) {
+      element.classList.remove('toggled');
+    }
+
+		ui.surfaceDisplayButtons[mode].classList.add("toggled");
 
 		surfaceRenderMode = mode;
 		
@@ -3775,8 +3901,8 @@ function showHideSunlight(show)
 {
 	if (typeof(show) === "boolean") renderSunlight = show;
 	else renderSunlight = !renderSunlight;
-	if (renderSunlight) ui.showSunlightButton.addClass("toggled");
-	if (!renderSunlight) ui.showSunlightButton.removeClass("toggled");
+	if (renderSunlight) ui.showSunlightButton.classList.add('toggled');
+	if (!renderSunlight) ui.showSunlightButton.classList.remove('toggled');
 
 	if (!planet) return;
 	
@@ -3798,8 +3924,8 @@ function showHidePlateBoundaries(show)
 {
 	if (typeof(show) === "boolean") renderPlateBoundaries = show;
 	else renderPlateBoundaries = !renderPlateBoundaries;
-	if (renderPlateBoundaries) ui.showPlateBoundariesButton.addClass("toggled");
-	if (!renderPlateBoundaries) ui.showPlateBoundariesButton.removeClass("toggled");
+	if (renderPlateBoundaries) ui.showPlateBoundariesButton.classList.add('toggled');
+	if (!renderPlateBoundaries) ui.showPlateBoundariesButton.classList.remove('toggled');
 
 	if (!planet) return;
 	
@@ -3819,8 +3945,8 @@ function showHidePlateMovements(show)
 {
 	if (typeof(show) === "boolean") renderPlateMovements = show;
 	else renderPlateMovements = !renderPlateMovements;
-	if (renderPlateMovements) ui.showPlateMovementsButton.addClass("toggled");
-	if (!renderPlateMovements) ui.showPlateMovementsButton.removeClass("toggled");
+	if (renderPlateMovements) ui.showPlateMovementsButton.classList.add("toggled");
+	if (!renderPlateMovements) ui.showPlateMovementsButton.classList.remove("toggled");
 
 	if (!planet) return;
 	
@@ -3840,8 +3966,8 @@ function showHideAirCurrents(show)
 {
 	if (typeof(show) === "boolean") renderAirCurrents = show;
 	else renderAirCurrents = !renderAirCurrents;
-	if (renderAirCurrents) ui.showAirCurrentsButton.addClass("toggled");
-	if (!renderAirCurrents) ui.showAirCurrentsButton.removeClass("toggled");
+	if (renderAirCurrents) ui.showAirCurrentsButton.classList.add("toggled");
+	if (!renderAirCurrents) ui.showAirCurrentsButton.classList.remove("toggled");
 
 	if (!planet) return;
 	
